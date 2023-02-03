@@ -119,11 +119,14 @@ public class SignUp {
     }
 
     public void addItem(Product product,int index){
+
         myBucket[index].setName(product.getName());
         myBucket[index].setPoints(product.getPoints());
     }
 
     public static int ifUserExits(SignUp[] users,String name,int count){
+        //find the user with username in users array
+        //count indicates how many users are currently registered in our users array
         if(count==0)
             return -1;
         for(int val=0;val<count;val++){
@@ -141,6 +144,7 @@ public class SignUp {
         return myBucket;
     }
     public static SignUp getUser(SignUp[] users,int index){
+        //get the user object from signup users array using index
         if(index < 0 && index >=3)
             return null;
         return users[index];

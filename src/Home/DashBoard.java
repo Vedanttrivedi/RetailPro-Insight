@@ -9,8 +9,9 @@ import java.util.Scanner;
 public class DashBoard {
     //responsible class for all the activities of user when they are logged in!
     private ProductOperation po;
-    public DashBoard(SignUp profile){
-        po  = new ProductOperation();
+    public DashBoard(SignUp profile,ProductOperation po){
+        this.po = po;
+        po.showProduct();
         showMenu(profile);
     }
     public void showMenu(SignUp profile){
@@ -93,7 +94,9 @@ public class DashBoard {
                                 profile.setPoints(oldPoints - discountedPrice);
                                 profile.addItem(new Product(finder.getName(),discountedPrice),oldItemsBought);
                                 System.out.println("Item is Bought !");
-                                System.out.println("you are given "+finder.getDiscountPercent()+"% discount");
+                                if(finder.getDiscountPercent()!=0){
+                                    System.out.println("You are given "+finder.getDiscountPercent());
+                                }
                                 po.setProductStock(ch);
                             }else{
                                 if(!isit)

@@ -6,12 +6,12 @@ public class ProductOperation {
 
     public ProductOperation(){
         products  = new Product[5];
-        products[0] = new Product("Redmi 10A",true,10000,3,10);
-        products[1] = new Product("MacBook Pro",true,300000,2,20);
+        products[0] = new Product("Redmi 10A",true,10000,6,10);
+        products[1] = new Product("MacBook Pro",true,300000,5,20);
         products[2] = new Product("Smart Tv",false,80000,0,5);
         products[3] = new Product("boAT Airpod",true,2000,5,0);
         products[4] = new Product("Iphone 13",true,90000,4,5);
-        showProduct();
+
     }
 
     public void showProduct(){
