@@ -1,115 +1,121 @@
-package Authentication;
+package authentication;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Scanner;
-import Catelog.Product;
+import catelog.Product;
+
+import java.io.Console;
 public class SignUp {
     private String username;
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     private String password;
     private String fullname;
     private int points;
     private int itemsBought;
-    private Product[] myBucket;
+    private ArrayList<Product> myBucket;
+    public SignUp(){}
 
-    public int getItemsBought() {
-        return itemsBought;
-    }
-
-    public void setItemsBought(int itemsBought) {
-        this.itemsBought = itemsBought;
-    }
-    public SignUp(){
-        //this.registerUser();
-    }
-    public SignUp(SignUp[] users,int totalUsers){
-        this.registerUser(users,totalUsers);
-    }
-    public String getName(){
-        return this.username;
-    }
-    public String getPassword(){
-        return this.password;
-    }
-    public String getFullname(){
-        return this.fullname;
-    }
-    public void registerUser(){
-        //for  single user
-        Scanner scan = new Scanner(System.in);
-        System.out.print("Enter Username :");
-        String tempUsername = scan.next();
-
-        this.username = tempUsername;
-            System.out.print("Enter fullname :");
-            this.fullname = scan.nextLine();
-            if(this.fullname.length()==0)
-                this.fullname = scan.nextLine();
-            System.out.print("Enter password : ");
-            this.password = scan.next();
-            if(this.password.length()==0)
-            {
-                System.out.println("Reenter password");
-                this.password = scan.next();
-            }
-
-            myBucket = new Product[3];
-            itemsBought = 0;
-            myBucket[0] = new Product();
-            myBucket[1] = new Product();
-            myBucket[2] = new Product();
-            points = 500000;
-            System.out.println("SignUp is successful! You can login now");
-
-    }
-    public void registerUser(SignUp[] users,int totalUsers){
+    public void registerUser(String username){
         //for multiple user
-
         Scanner scan = new Scanner(System.in);
-        System.out.print("Enter Username :");
-        String tempUsername = scan.next();
-        int valid = ifUserExits(users,tempUsername,totalUsers);
-        if(valid==1){
-            System.out.println("Username Already exits!Cannot Create Account!");
-        }else{
-            this.username = tempUsername;
-
-            System.out.print("Enter fullname :");
+        this.username = username;
+        System.out.print("Enter fullname :");
+        this.fullname = scan.nextLine();
+        if(this.fullname.length()==0)
             this.fullname = scan.nextLine();
-            if(this.fullname.length()==0)
-                this.fullname = scan.nextLine();
-
-            System.out.print("Enter password : ");
-            this.password = scan.next();
-            if(this.password.length()==0)
-                this.password = scan.next();
-
-            myBucket = new Product[3];
-            itemsBought = 0;
-            myBucket[0] = new Product();
-            myBucket[1] = new Product();
-            myBucket[2] = new Product();
-            points = 500000;
-            System.out.println("SignUp is successful! You can login now");
+        System.out.print("Enter password : ");
+        String password="";
+        Console cls = System.console();
+        if(cls!=null)
+        {
+            char[] tempPass = cls.readPassword("");
+            password = String.valueOf(tempPass);
+            if(password.length()!=0)
+            {
+                for(char cd:tempPass)
+                    System.out.print("*");
+            }
+            while(password.length()==0)
+            {
+                System.out.println("password cannot be empty!!");
+                System.out.print("Enter password :");
+                char[] temp= cls.readPassword("");
+                for(char c:temp)
+                    System.out.print("*");
+                System.out.println();
+                password = String.valueOf(temp);
+            }
+            System.out.println();
         }
+        else
+        {
+            System.out.println("console is null");
+            System.out.println("Enter password :");
+            password = scan.next();
+            while(password.length()==0)
+            {
+                System.out.println("password cannot be empty!!");
+                System.out.print("Enter password :");
+
+                password = scan.next();
+            }
+        }
+        this.password = password;
+        myBucket = new ArrayList<>();
+        itemsBought = 0;
+        points = 500000;
+
     }
-    public void forgetPassword(String username,SignIn login){
-        Scanner sc = new Scanner(System.in);
-        if(login!=null && this.username.equals(username)){
-            System.out.println("Enter new password : ");
-            this.password = sc.nextLine();
-            System.out.println("Password is reset ! You can login now");
+
+    public void forgetPassword(HashMap<String,SignUp> users){
+        Scanner scan = new Scanner(System.in);
+        System.out.println("\t\tPassword Reset Form!!");
+        System.out.print("Enter Username to reset password : ");
+        String tempname = scan.next();
+        //check if the user exists with that username
+        boolean check = users.containsKey(tempname);
+        if(check){
+            //user exists so we can change the password
+            System.out.print("Enter new password : ");
+            String password="";
+            Console cls = System.console();
+            if(cls!=null)
+            {
+                char[] tempPass = cls.readPassword("");
+                for(char c:tempPass)
+                    System.out.print("*");
+                password = String.valueOf(tempPass);
+                while(password.length()==0)
+                {
+                    System.out.println("password cannot be empty!!");
+                    System.out.print("Enter new password :");
+                    char[] temp= cls.readPassword("");
+                    for(char c:temp)
+                        System.out.print("*");
+                    System.out.println();
+                    password = String.valueOf(temp);
+                }
+            }
+            else
+            {
+                System.out.println("console is null");
+                System.out.println("Enter new password :");
+                password = scan.next();
+                while(password.length()==0)
+                {
+                    System.out.println("password cannot be empty!!");
+                    System.out.print("Enter new password :");
+                    password = scan.next();
+                }
+            }
+            users.get(tempname).setPassword(password);
+
+            System.out.println("Your password has been updated! You can login now");
         }else{
-            System.out.println("Username Not Found! try again");
+            //username does not exists
+            System.out.println("Account does not exists with that username! Try again");
         }
+    }
 
-    }
-    public void showProfile(){
-        System.out.println("Welcome To "+this.fullname+" 's Profile");
-        System.out.println("Your Username : "+this.username);
-    }
     public String getUsername(){
         return this.username;
     }
@@ -117,37 +123,48 @@ public class SignUp {
     public void setPoints(int points) {
         this.points = points;
     }
-
-    public void addItem(Product product,int index){
-
-        myBucket[index].setName(product.getName());
-        myBucket[index].setPoints(product.getPoints());
+    public void setPassword(String password) {
+        this.password = password;
     }
-
-    public static int ifUserExits(SignUp[] users,String name,int count){
-        //find the user with username in users array
-        //count indicates how many users are currently registered in our users array
-        if(count==0)
-            return -1;
-        for(int val=0;val<count;val++){
-
-            if(users[val]!=null && users[val].getUsername().equals(name))
-                return val;
-        }
-        return -1;
+    public void addItem(Product product,int index)
+    {
+        myBucket.add(product);
+        myBucket.get(index).setName(product.getName());
+        myBucket.get(index).setPoints(product.getPoints());
     }
     public int getPoints() {
         return points;
     }
 
-    public Product[] getMyBucket() {
+    public ArrayList<Product> getMyBucket() {
         return myBucket;
     }
-    public static SignUp getUser(SignUp[] users,int index){
-        //get the user object from signup users array using index
-        if(index < 0 && index >=3)
-            return null;
-        return users[index];
+    public int getItemsBought() {
+        return itemsBought;
+    }
+
+    public void setItemsBought(int itemsBought) {
+        this.itemsBought = itemsBought;
+    }
+    public SignUp(String name){
+        this.registerUser(name);
+    }
+    public String getPassword(){
+        return this.password;
+    }    public String getName(){
+        return this.username;
+    }
+
+    public String getFullname(){
+        return this.fullname;
     }
 
 }
+/*
+ * why hashmap is not used for user bucket??
+ * because hashmap stores data in no order, and we want to maintain order of which item is
+ * added last in the cart.
+ * we want display all items they bought in order even if they are similar.
+ * with arraylist we can add product in the order the user is purchasing,
+ * and we can display in reverse so the last item purchase will be shown as first.
+ * */

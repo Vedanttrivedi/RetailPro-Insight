@@ -1,10 +1,9 @@
-package Catelog;
+package catelog;
 
 public class Product {
     public void setName(String name) {
         this.name = name;
     }
-
     private String name;
     private boolean isAvailable;
 
@@ -25,8 +24,6 @@ public class Product {
     public void setDiscountPercent(int discountPercent) {
         this.discountPercent = discountPercent;
     }
-
-
     public  Product(){
 
     }

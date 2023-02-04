@@ -1,33 +1,43 @@
-package Home;
-import Authentication.SignUp;
-import Authentication.SignIn;
-import Catelog.ProductOperation;
-
+package home;
+import authentication.SignUp;
+import authentication.SignIn;
+import catelog.ProductOperation;
+import java.util.HashMap;
 import java.util.Scanner;
-
+import java.io.Console;
 public class HomeScreen {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
+        Console cls = System.console();
         ProductOperation po = new ProductOperation();
-
-        final int MAX_USERS=3;
         boolean isSystemOn = true;
         SignUp register=null;
-        SignUp[] users = new SignUp[3];
+        HashMap<String,SignUp> users = new HashMap<>();
         int totalUsers=0;
         SignIn login=null;
-        while(isSystemOn){
+        while(isSystemOn)
+        {
             System.out.println("Home->>Press 1 for Registration,\t 2 for Login,\t 3 for Forget password,\t  0 to exit the application");
             System.out.print("Enter choice :");
             int choice = sc.nextInt();
             switch (choice){
                 case 1:
                     System.out.println("\t\tRegistration Form!!");
-                    if(totalUsers >=  MAX_USERS){
-                        System.out.println("Max User Registration Limit Reached! You can login in other accounts!");
-                    }else{
-                        users[totalUsers] = new SignUp(users,totalUsers);
+                    System.out.print("Enter Username :");
+                    String tempUsername = sc.next();
+
+                    //check if user exists in hashmap of users
+                    if(users.containsKey(tempUsername))
+                    {
+                        System.out.println("Username already exists!cannot create account!");
+                    }
+                    else
+                    {
+                        //username does not exist . so we can create account
+                        SignUp user = new SignUp(tempUsername);
+                        users.put(tempUsername,user);
                         totalUsers++;
+                        System.out.println("SignUp is successful! You can login now");
                     }
                     break;
                 case 2:
@@ -35,20 +45,38 @@ public class HomeScreen {
                     System.out.print("Enter username :");
                     sc.nextLine();
                     String name = sc.nextLine();
-                    System.out.print("Enter password :");
-                    String pass = sc.nextLine();
                     //check if the user exits in our list of users
-                    int index = SignUp.ifUserExits(users,name,totalUsers);
-                    if(index!=-1){
+                    SignUp tempLoggedUser = users.get(name);
+                    if(tempLoggedUser!=null)
+                    {
+                        //username exists to we can ask for  password
+                        System.out.print("Enter password :");
+                        String pwd;
+                        if(cls!=null)
+                        {
+                            char[] tempPass = cls.readPassword("");
+                            pwd = String.valueOf(tempPass);
+                            if(pwd.length()!=0)
+                            {
+                                for(char cd:tempPass)
+                                    System.out.print("*");
+                            }
+                            System.out.println();
+                        }
+                        else
+                        {
+                            System.out.println("System.console is null. using scanner to input password");
+                            pwd = sc.next();
+                        }
                         login = new SignIn();
-                        SignUp user = SignUp.getUser(users,index);
-                        boolean val = login.doLogin(name,pass,user);
-                        if(val){
+                        //now check for password matching
+                        boolean checkForPassword = login.doLogin(name,pwd,tempLoggedUser);
+                        if(checkForPassword){
                             //user is logged in show user dashboard
                             System.out.println("\t\tYou are logged In!");
-                            register = user;
+                            register = users.get(name);
                             DashBoard board = new DashBoard(register,po);
-
+                            //Now user is logged out from dashboard so  set login and register as  null
                             register = null;
                             login=null;
                         }else{
@@ -58,29 +86,15 @@ public class HomeScreen {
                         System.out.println("Account Not Found!");
                     }
                     break;
-                case 3:
-                    System.out.println("\t\tPassword Reset Form!!");
-                    System.out.print("Enter Username to reset password : ");
-                    String tempname = sc.next();
-                    //check if the user exits with that username
-                    int checker = SignUp.ifUserExits(users,tempname,totalUsers);
 
-                    if(checker!=-1){
-                        //user exists so we can change the password
-                        System.out.print("Enter new password : ");
-                        String pwd = sc.next();
-                        users[checker].setPassword(pwd);
-                        System.out.println("Your password has been updated! You can login now");
-                    }else{
-                        //username does not exists
-                        System.out.println("Account does not exists with that username! Try again");
-                    }
+                case 3:
+                    SignUp temp = new SignUp();
+                    temp.forgetPassword(users);
                     break;
                 case 0:
                     isSystemOn = false;
                     break;
             }
-
         }
         System.out.println("System is off!");
     }
