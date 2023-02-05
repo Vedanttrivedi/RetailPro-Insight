@@ -3,7 +3,7 @@ package home;
 import authentication.SignUp;
 import catelog.Product;
 import catelog.ProductOperation;
-
+import catelog.CustomUserProduct;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -41,7 +41,7 @@ public class DashBoard {
                     {
                         //show all of user 's products
                         System.out.println("\t\tName\t\t|Points\t\t");
-                        ArrayList<Product> data = profile.getMyBucket();
+                        ArrayList<CustomUserProduct> data = profile.getMyBucket();
                         int start = profile.getItemsBought()-1;
                         for(int val=start;val>=0;val--)
                         {
@@ -111,7 +111,7 @@ public class DashBoard {
                                 profile.setItemsBought(oldItemsBought+quantity);
                                 profile.setPoints(oldPoints - discountedPrice);
                                 for(int i=0;i<quantity;i++)
-                                    profile.addItem(new Product(finder.getName(),discountedPrice/quantity),oldItemsBought+i);
+                                    profile.addItem(new CustomUserProduct(finder.getName(),discountedPrice/quantity),oldItemsBought+i);
                                 if(quantity==1)
                                     System.out.println("Item is Bought !");
                                 else

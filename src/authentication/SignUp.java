@@ -2,6 +2,8 @@ package authentication;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
+
+import catelog.CustomUserProduct;
 import catelog.Product;
 
 import java.io.Console;
@@ -11,7 +13,7 @@ public class SignUp {
     private String fullname;
     private int points;
     private int itemsBought;
-    private ArrayList<Product> myBucket;
+    private ArrayList<CustomUserProduct> myBucket;
     public SignUp(){}
 
     public void registerUser(String username){
@@ -126,7 +128,7 @@ public class SignUp {
     public void setPassword(String password) {
         this.password = password;
     }
-    public void addItem(Product product,int index)
+    public void addItem(CustomUserProduct product, int index)
     {
         myBucket.add(product);
         myBucket.get(index).setName(product.getName());
@@ -136,7 +138,7 @@ public class SignUp {
         return points;
     }
 
-    public ArrayList<Product> getMyBucket() {
+    public ArrayList<CustomUserProduct> getMyBucket() {
         return myBucket;
     }
     public int getItemsBought() {

@@ -94,6 +94,9 @@ public class HomeScreen {
                 case 0:
                     isSystemOn = false;
                     break;
+                default:
+                    System.out.println("Invalid choice!");
+                    break;
             }
         }
         System.out.println("System is off!");
